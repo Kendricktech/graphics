@@ -1,36 +1,35 @@
+import * as BABYLON from 'babylonjs';
+
 const canvas = document.getElementById("renderCanvas");
 const engine = new BABYLON.Engine(canvas, true);
 
 const createScene = () => {
-    const scene = new BABYLON.Scene(engine);
+  const scene = new BABYLON.Scene(engine);
 
-    const camera2 = new BABYLON.FreeCamera("camera2", new BABYLON.Vector3(0, 5, -10), scene);
-    camera2.setTarget(BABYLON.Vector3.Zero());
-    camera2.attachControl(canvas, true);
+  const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 5, BABYLON.Vector3.Zero(), scene);
+  camera.attachControl(canvas, true);
 
-    const light2 = new BABYLON.HemisphericLight("light2", new BABYLON.Vector3(0, 1, 0), scene);
-    light2.intensity = 0.7;
+  const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, -10, -1), scene);
 
-    const base = BABYLON.MeshBuilder.CreateGround("base", { width: 10, height: 10 }, scene);
-    const baseMaterial = new BABYLON.StandardMaterial("Base Material", scene);
-    baseMaterial.diffuseColor = BABYLON.Color3.Green();
+  const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 2 }, scene);
+  sphere.position.y = 1;
 
+  const sphere2 = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 2 }, scene);
+  sphere2.position.x = 4;
+  sphere2.position.y = 1;
 
-    // BABYLON.ImportMeshAsync(AssetsManager.meshes.Yeti.rootUrl).then((result)) =>{
+  const box = BABYLON.MeshBuilder.CreateBox("box",{size:2},scene);
+  box.position.x= -4;
+  box.position.y = 1;
+  const ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 6, height: 6 }, scene);
 
-    // }
+  const material = new BABYLON.StandardMaterial("material", scene);
+  material.diffuseColor = new BABYLON.Color3(1, 0, 0);
+  ground.material = material;
 
-    const checkerTexture = new BABYLON.Texture(AssetsManager.textures.checkerboard_basecolor.png.path, scene);
-    baseMaterial.diffuseTexture = checkerTexture;
-
-    base.material = baseMaterial;
-
-    return scene;
+  return scene;
 };
 
 const scene = createScene();
-engine.runRenderLoop(() => {
-    scene.render();
-});
-
+engine.runRenderLoop(() => scene.render());
 window.addEventListener("resize", () => engine.resize());
